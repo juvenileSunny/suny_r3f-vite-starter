@@ -13,19 +13,20 @@ import * as THREE from 'three';
 
 export function Avatar(props) {
   const { animations } = props;
-  const { headFollow , cursorFollow } = useControls({
+  const { headFollow , cursorFollow, wireFrame } = useControls({
     headFollow: false,
     cursorFollow: false,
+    wireFrame: false,
   })
   const { camera } = useThree()
   const group = useRef();
-  const { scene } = useGLTF('/models/sunny_avatar.glb')
+  const { scene } = useGLTF('./models/sunny_avatar.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
 
-  const { animations: typingAnimation } = useFBX('/Animations/typing.fbx')
-  const { animations: standingAnimation } = useFBX('/Animations/standing.fbx')
-  const { animations: fallingAnimation } = useFBX('/Animations/falling.fbx')
+  const { animations: typingAnimation } = useFBX('./Animations/typing.fbx')
+  const { animations: standingAnimation } = useFBX('./Animations/standing.fbx')
+  const { animations: fallingAnimation } = useFBX('./Animations/falling.fbx')
 
   typingAnimation[0].name = 'typing'
   standingAnimation[0].name = 'standing'
@@ -45,29 +46,44 @@ export function Avatar(props) {
   })
 
   useEffect(() => {
-    actions[animations]?.fadeIn(0.7).play();
-    return () => actions[animations]?.fadeOut(0.7); 
-  }, [animations]);
+  group.current.traverse((child) => {
+    if (child.isMesh && child.material) {
+      child.material.wireframe = wireFrame;
+    }
+  });
+}, [wireFrame]);
+
+
   // useEffect(() => {
-  //   if (!actions || !animations) return;
+  //   actions[animations]?.fadeIn(0.7).play();
+  //   return () => actions[animations]?.fadeOut(0.7); 
+  // }, [animations]);
 
-  //   let current = actions[animations];
-  //   if (!current) return;
+  useEffect(() => {
+    Object.values(materials).forEach((material) => {
+      material.wireframe = wireFrame;
+    });
+  }, [wireFrame]);
+  useEffect(() => {
+    if (!actions || !animations) return;
 
-  //   // Stop all others
-  //   Object.values(actions).forEach((action) => {
-  //     if (action !== current) {
-  //       action.fadeOut(0.5);
-  //     }
-  //   });
+    let current = actions[animations];
+    if (!current) return;
 
-  //   // Fade in new animation
-  //   current.fadeIn(0.5).play();
+    // Stop all others
+    Object.values(actions).forEach((action) => {
+      if (action !== current) {
+        action.fadeOut(0.5);
+      }
+    });
 
-  //   return () => {
-  //     current.fadeOut(0.5);
-  //   };
-  // }, [animations, actions]);
+    // Fade in new animation
+    current.fadeIn(0.5).play();
+
+    return () => {
+      current.fadeOut(0.5);
+    };
+  }, [animations, actions]);
 
   return (
     <group {...props} ref={group} dispose={null}>

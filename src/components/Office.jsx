@@ -155,7 +155,7 @@ export function Office(props) {
       <mesh name="group2052255221" geometry={nodes.group2052255221.geometry} material={materials['mat15.002']} position={[-3.703, 2.964, -0.504]} rotation={[0, 1.571, 0]} scale={0.867} />
       <mesh name="group1457147635" geometry={nodes.group1457147635.geometry} material={materials['mat15.002']} position={[-3.703, 2.964, -0.504]} rotation={[0, 1.571, 0]} scale={0.867} />
       <mesh name="group1601593260" geometry={nodes.group1601593260.geometry} material={materials['mat23.005']} position={[-3.703, 2.964, -0.504]} rotation={[0, 1.571, 0]} scale={0.867} />
-      <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={rugTextureMaterials} position={[0.853, 0.237, 1.366]} scale={2.316} />
+      {/* <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={rugTextureMaterials} position={[0.853, 0.237, 1.366]} scale={2.316} /> */}
       <group name="Wall" position={[0, -0.052, 0]} scale={4}>
         <mesh name="Plane" geometry={nodes.Plane.geometry} material={floorTextureMaterials} />
         <mesh name="Plane_1" geometry={nodes.Plane_1.geometry} material={floorTextureMaterials} />
